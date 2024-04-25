@@ -9,7 +9,7 @@ import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.Mat
 
-class MainActivity : ComponentActivity(), CameraBridgeViewBase.CvCameraViewListener {
+class MainActivity : ComponentActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,12 +23,15 @@ class MainActivity : ComponentActivity(), CameraBridgeViewBase.CvCameraViewListe
         }
 
         val mOpenCvCameraView = findViewById(R.id.tutorial1_activity_java_surface_view) as? CameraBridgeViewBase
-        mOpenCvCameraView?.setCvCameraViewListener(this@MainActivity)
-        mOpenCvCameraView?.enableView()
+        mOpenCvCameraView?.apply {
+            setCameraPermissionGranted()
+            setCvCameraViewListener(this@MainActivity)
+            enableView()
+        }
 
         Log.d(TAG, "onCreate() called with: $mOpenCvCameraView")
 
-        ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.CAMERA),100)
+        ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.CAMERA), 100)
     }
 
     override fun onCameraViewStarted(width: Int, height: Int) {
@@ -39,9 +42,10 @@ class MainActivity : ComponentActivity(), CameraBridgeViewBase.CvCameraViewListe
         Log.d(TAG, "onCameraViewStopped() called")
     }
 
-    override fun onCameraFrame(inputFrame: Mat): Mat {
-        return inputFrame.diag()
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
+        return inputFrame.rgba()
     }
+
 
     companion object {
         private const val TAG = "MainActivity"
