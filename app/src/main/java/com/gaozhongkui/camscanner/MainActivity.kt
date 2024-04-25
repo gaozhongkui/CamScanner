@@ -5,11 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
+import com.gaozhongkui.camscanner.utils.PaperDetectionHelper
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.Mat
 
 class MainActivity : ComponentActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +38,11 @@ class MainActivity : ComponentActivity(), CameraBridgeViewBase.CvCameraViewListe
         Log.d(TAG, "onCreate() called with: $mOpenCvCameraView")
 
         ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.CAMERA), 100)
+
+        GlobalScope.launch(Dispatchers.IO) {
+            PaperDetectionHelper.mainAction(this@MainActivity)
+        }
+
     }
 
     override fun onCameraViewStarted(width: Int, height: Int) {
