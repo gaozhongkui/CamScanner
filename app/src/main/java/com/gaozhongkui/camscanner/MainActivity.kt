@@ -1,6 +1,7 @@
 package com.gaozhongkui.camscanner
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.gaozhongkui.camscanner.ui.theme.CamScannerTheme
+import org.opencv.android.OpenCVLoader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +25,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        if (OpenCVLoader.initLocal()) {
+            Log.d(TAG, "onCreate() 加载成功")
+        } else {
+            Log.d(TAG, "onCreate() 加载失败")
+        }
+
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
 
